@@ -1,6 +1,5 @@
 def predict_value(history):
 
-
     if all([x == 0 for x in history]):
         return 0
     
