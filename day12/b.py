@@ -1,4 +1,3 @@
-#from functools import cache
 def get_chunk(s, n):
     end = s[-n:]
 
