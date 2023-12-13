@@ -1,3 +1,5 @@
+from functools import cache
+
 def get_chunk(s, n):
     end = s[-n:]
 
@@ -20,52 +22,37 @@ def eat_chunk(s, t):
     
     return count_matches(chunk[:-1], t[:-1])
 
-mem = {}
+@cache
 def count_matches(s, t):
-    
-    if (s, t) in mem:
-        return mem[(s, t)]
-    
-    if sum(t) > len(s):
-        mem[(s, t)] = 0
-        return mem[(s, t)]
 
-    if s is None:
-        mem[(s, t)] = 0
-        return mem[(s, t)]
-
+    if sum(t) + len(t) - 1 > len(s):
+        return 0
+    
     if len(s) == 0:
-        mem[(s, t)] = 1
-        return mem[(s, t)]
-
+        return 1
     
-    if s[-1] == '.':
-        mem[(s, t)] = count_matches(s[:-1], t)
-        return mem[(s, t)]
-
-    
-    if s[-1] == '#':
-        mem[(s, t)] = eat_chunk(s, t)
-        return mem[(s, t)]
-
-    mem[(s, t)] = count_matches(s[:-1], t) + eat_chunk(s, t)
-    return mem[(s, t)]
+    match s[-1]:
+        case '.':
+            return count_matches(s[:-1], t)
+        case '#':
+            return eat_chunk(s, t)
+        case _:
+            return count_matches(s[:-1], t) + eat_chunk(s, t)
         
 
-    
 with open('input.txt') as f:
     lines = [line.strip() for line in f.readlines()]
 
-
 total = 0
 for line in lines:
-    test_string, test_list = line.split()
-    test_string += '?'
-    test_string = test_string * 5
-    test_string = test_string[:-1]
+    springs, test_list = line.split()
+
+    springs += '?'
+    springs = springs * 5
+    springs = springs[:-1]
 
     test_list = [int(x) for x in test_list.split(',')] * 5
-    total += count_matches(test_string, tuple(test_list))
+    total += count_matches(springs, tuple(test_list))
 
 
 print(total)

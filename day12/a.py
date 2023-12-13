@@ -21,24 +21,21 @@ def eat_chunk(s, t):
 
 def count_matches(s, t):
 
-    if sum(t) > len(s):
+    if sum(t) + len(t) - 1 > len(s):
         return 0
     
-    if s is None:
-        return 0
-
     if len(s) == 0:
         return 1
     
-    if s[-1] == '.':
-        return count_matches(s[:-1], t)
-    
-    if s[-1] == '#':
-        return eat_chunk(s, t)
-
-    return count_matches(s[:-1], t) + eat_chunk(s, t)
+    match s[-1]:
+        case '.':
+            return count_matches(s[:-1], t)
+        case '#':
+            return eat_chunk(s, t)
+        case _:
+            return count_matches(s[:-1], t) + eat_chunk(s, t)
         
-
+        
     
 with open('input.txt') as f:
     lines = [line.strip() for line in f.readlines()]
