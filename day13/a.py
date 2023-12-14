@@ -18,9 +18,9 @@ def count_mirror(pattern, start, get_line):
         while get_line(pattern, start + count-1) == get_line(pattern, start - count):
             count += 1
     except IndexError:
-        return count
+        return True
 
-    return -1
+    return False
 
 def find_mirror(pattern, length, get_line):
 
@@ -30,16 +30,15 @@ def find_mirror(pattern, length, get_line):
         col = get_line(pattern, idx)
 
         if prev == col:
-            reflexion_size = count_mirror(pattern, idx, get_line)
 
-            if reflexion_size != -1:
-                return (reflexion_size, idx)
+            if count_mirror(pattern, idx, get_line):
+                return idx
 
         prev = col
 
-    return (-1, -1)
+    return -1
 
-with open('input.txt') as f:
+with open('felix.txt') as f:
     patterns = [ pattern.split('\n') for pattern in f.read().split('\n\n')]
 
 total = 0
@@ -47,12 +46,12 @@ total = 0
 
 for pattern in patterns:
     
-    horizontal_pattern = find_mirror(pattern, len(pattern), get_row)
+    horizontal = find_mirror(pattern, len(pattern), get_row)
 
-    if horizontal_pattern[1] != -1:
-        total += horizontal_pattern[1] * 100
+    if horizontal != -1:
+        total += horizontal * 100
     else:
-        vertical_pattern = find_mirror(pattern, len(pattern[0]), get_col)
-        total += vertical_pattern[1]
+        vertical = find_mirror(pattern, len(pattern[0]), get_col)
+        total += vertical
 
 print(total)
