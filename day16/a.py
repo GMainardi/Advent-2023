@@ -1,6 +1,7 @@
 import sys
 sys.setrecursionlimit(10000)
 
+
 slash = {
     complex(1, 0): complex(0, -1),
     complex(-1, 0): complex(0, 1),
@@ -20,8 +21,9 @@ downward = complex(1, 0)
 leftward = complex(0, -1)
 rightward = complex(0, 1)
 
+def energize(mirror_map: list[str], pos: complex, direction: complex):
 
-def energize(mirror_map: list[str], pos: complex, direction: complex, energized: dict):
+    global energized
 
     w, h = len(mirror_map), len(mirror_map[0])
 
@@ -47,21 +49,22 @@ def energize(mirror_map: list[str], pos: complex, direction: complex, energized:
 
     elif char == '|':
         if direction.real == 0:
-            up = energize(mirror_map, pos+upward, upward, energized)
-            down = energize(mirror_map, pos+downward, downward, energized)
+            up = energize(mirror_map, pos+upward, upward)
+            down = energize(mirror_map, pos+downward, downward)
             return up.union(down)
         
     elif char == '-':
         if direction.imag == 0:
-            right = energize(mirror_map, pos+rightward, rightward, energized)
-            left = energize(mirror_map, pos+leftward, leftward, energized)
+            right = energize(mirror_map, pos+rightward, rightward)
+            left = energize(mirror_map, pos+leftward, leftward)
             return left.union(right)
         
-    return energize(mirror_map, pos+direction, direction, energized)
+    return energize(mirror_map, pos+direction, direction)
 
 with open('input.txt') as f:
     mirror_map = [line.strip() for line in f.readlines()]
 
 start = complex(0, 0)
 direction = complex(0, 1)
-print(len(energize(mirror_map, start, direction, {})))
+energized = {}
+print(len(energize(mirror_map, start, direction)))
