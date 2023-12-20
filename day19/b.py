@@ -110,8 +110,6 @@ def count_probs(part, ranges) -> int:
     return total
         
     
-
-
 with open('input.txt') as f:
     validations = {line.strip().split('{')[0]: Validator(line.strip()) for line in f.read().split('\n\n')[0].split('\n')}
 
